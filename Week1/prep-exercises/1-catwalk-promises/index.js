@@ -13,9 +13,10 @@ function walk(img, startPos, stopPos) {
     // Make good use of the `STEP_INTERVAL_PX` and `STEP_INTERVAL_MS`
     // constants.
     let catPos = startPos + STEP_SIZE_PX;
-    setInterval(() => {
+    const myInterval = setInterval(() => {
       img.style.left = catPos + 'px';
       if (catPos >= stopPos) {
+        clearInterval(myInterval);
         resolve();
       } else {
         catPos = catPos + STEP_SIZE_PX;
@@ -43,12 +44,11 @@ function catWalk() {
   const startPos = -img.width;
   const centerPos = (window.innerWidth - img.width) / 2;
   const stopPos = window.innerWidth;
-  //while (true) {
+  
   walk(img, startPos, centerPos)
   .then(()=>dance(img))
   .then(()=>walk(img, centerPos, stopPos))
-  .then(()=>walk(img, startPos, centerPos));
-  //}
+  .then(catWalk)
   // Use the `walk()` and `dance()` functions to let the cat do the following:
   // 1. Walk from `startPos` to `centerPos`.
   // 2. Then dance for 5 secs.
